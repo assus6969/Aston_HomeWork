@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        class MyArraySizeException extends Exception {
+        public MyArraySizeException(String message) {
+        super(message);
+        }
+        }
+
+        class MyArrayDataException extends Exception {
+        public MyArrayDataException(String message) {
+        super(message);
+        }
+        }
+
+        public class Main {
+
+        // Метод, который проверяет размер, преобразует элементы в int и суммирует их
+        public static int sumArray(String[][] array) throws MyArraySizeException, MyArrayDataException {
+        // Проверка размера массива
+        if (array == null || array.length != 4) {
+        throw new MyArraySizeException("Массив должен иметь размер 4x4. Текущий размер по строкам: " + (array == null ? "null" : array.length));
+        }
+
+        for (int i = 0; i < array.length; i++) {
+        if (array[i] == null || array[i].length != 4) {
+        throw new MyArraySizeException(
+        "Массив должен иметь размер 4x4. Ошибка в строке " + i + ": длина равна " + (array[i] == null ? "null" : array[i].length)
+        );
+        }
+        }
+
+        int sum = 0;
+
+        // Проход по всем элементам, преобразование и суммирование
+        for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+        String cell = array[i][j];
+        try {
+        sum += Integer.parseInt(cell);
+        } catch (NumberFormatException e) {
+        throw new MyArrayDataException("Некорректные данные в ячейке [" + i + "][" + j + "]: значение \"" + cell + "\" не может быть преобразовано в int.");
+        }
+        }
+        }
+
+        return sum;
+        }
+
+        public static void main(String[] args) {
+        // Пример корректного массива 4x4
+        String[][] correctArray = {
+        {"1", "2", "3", "4"},
+        {"5", "6", "7", "8"},
+        {"9", "10", "11", "12"},
+        {"13", "14", "15", "16"}
+        };
+
+        // Пример массива с неверными данными
+        String[][] badDataArray = {
+        {"1", "2", "3", "4"},
+        {"5", "abc", "7", "8"}, // некорректное значение
+        {"9", "10", "11", "12"},
+        {"13", "14", "15", "16"}
+        };
+
+        // Пример массива неправильного размера
+        String[][] wrongSizeArray = {
+        {"1", "2", "3"},
+        {"4", "5", "6"},
+        {"7", "8", "9"},
+        {"10", "11", "12"}
+        };
+
+        // Тестируем на корректном массиве
+        testArray(correctArray);
+
+        // Тестируем на массиве с неверными данными
+        testArray(badDataArray);
+
+        // Тестируем на массиве неправильного размера
+        testArray(wrongSizeArray);
+        }
+
+        private static void testArray(String[][] array) {
+        try {
+        int result = sumArray(array);
+        System.out.println("Сумма элементов: " + result);
+        } catch (MyArraySizeException e) {
+        System.err.println("Ошибка размера массива: " + e.getMessage());
+        } catch (MyArrayDataException e) {
+        System.err.println("Ошибка данных в массиве: " + e.getMessage());
+        } catch (Exception e) {
+        // На случай любых других непредвиденных ошибок
+        System.err.println("Произошла непредвиденная ошибка: " + e.getMessage());
+        }
+        System.out.println("-------------------------");
+        }
+        }
